@@ -1,0 +1,17 @@
+#map {
+      height: 350px;
+      width: 60%;
+      float: right;
+    }
+#modal-map{
+  height:300px;
+  width:100%;
+}
+#title {
+  display: inline-block;
+}
+
+.add-new {
+  float:right;
+  margin-top: 15px;
+}
