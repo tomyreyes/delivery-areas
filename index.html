@@ -5,9 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Delivery Areas</title>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
     crossorigin="anonymous">
   <link rel="stylesheet" href="styles.css">
+
 </head>
 
 <body>
@@ -68,63 +71,31 @@
               <p>rc-slider</p>
             </div>
             <div class="col-sm-5">
-              <div class="panel panel-default">
-                <div class="panel-body">
-                  <p>1</p>
+              <div class="card">
+                <div class="card-body">
+                  1
                 </div>
               </div>
               </div>
             </div>
           </div>
-
-
           </div>
           <div class="row">
             <div id="modal-map"></div>
           </div>
-
-
         </div>
       </div>
     </div>
     </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Save</button>
       </div>
     </div>
   </div>
 </div>
   <hr></hr>
-  <div id="map"></div>
-  <script>
-    var storeCenter = { lng: -80.2736907, lat: 25.933373 };
-    function initMap() {
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 8,
-        center: { lat: 25.933373, lng: -80.2736907 }
-      });
-      var marker = new google.maps.Marker({
-        position: storeCenter,
-        map: map
-      });
-    
-
-    }
-  </script>
-  <script>
-    var storeCenter = { lng: -80.2736907, lat: 25.933373 };
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('modal-map'), {
-          zoom: 8,
-          center: { lat: 25.933373, lng: -80.2736907 }
-        });
-        var marker = new google.maps.Marker({
-          position: storeCenter,
-          map: map
-        });
-    }
-    </script>
+  <div id="map"></div>  
   </div>
 
 
@@ -132,16 +103,14 @@
 
 
 
-
-
-
+  
+  <script src="scripts.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDK5cgjI7DpnkOJrbLuXUcx6FA2KPl72Jw&callback=initMap">
   </script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
+
 </body>
 </html>
