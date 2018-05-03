@@ -3,14 +3,12 @@ let storeCenter = { lng: -80.2736907, lat: 25.933373 }
 let delivery_areas = []
 let currentLayers = []
 let colorCount = 0
+let initialMap = false
+let modalMap = false 
 
 
-initMap = () => { 
- 
-  let initialized = false // A flag so initialMap is only initialized once. 
-
-  if (initialized === false) {
-  let initialMap = new google.maps.Map(document.getElementById('map'), {
+if(initialMap === false) { 
+  initialMap = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: { lat: 25.933373, lng: -80.2736907 }
   })
@@ -18,9 +16,9 @@ initMap = () => {
     position: storeCenter,
     map: initialMap
   })
-  initialized = true
 }
-  let modalMap = new google.maps.Map(document.getElementById('modal-map'), {
+
+  modalMap = new google.maps.Map(document.getElementById('modal-map'), {
     zoom: 12,
     center: { lat: 25.933373, lng: -80.2736907 }
   })
@@ -28,10 +26,11 @@ initMap = () => {
     position: storeCenter,
     map: modalMap
   })
+
   google.maps.event.addListenerOnce(modalMap, 'idle', function() {
     loadAreas()
   })
-}
+
 
 const getRandomColour = () => {
    let colors = [
@@ -57,13 +56,13 @@ const getRandomColour = () => {
 const loadAreas = () => {
   console.log('call')
   let newLayers = []
-  let bounds = new window.google.maps.LatLngBounds()
+  let bounds = new google.maps.LatLngBounds() 
   delivery_areas = localStorage.getItem('delivery_areas')
 
   if (delivery_areas.length > 0) {
     delivery_areas.forEach(element => {
       if (element.type === 'radius') {
-        let newShape = new window.google.maps.Circle({
+        let newShape = new google.maps.Circle({
           strokeColor: element.color,
           strokeOpacity: 0.8,
           strokeWeight: 2,
@@ -73,16 +72,15 @@ const loadAreas = () => {
           center: element.coordinates,
           radius: element.details * 1000
         })
-        $(window.google.maps.event.addListener).mouseover(function(){
-          $('newShape').data({fillOpacity: 0.6}) //double check this 
-          //this.setOptions({fillOpacity: 0.6}) could work in this case 
-        })  
-        $(window.google.maps.event.addListener).mouseout(function(){
-          $('newShape').data({ fillOpacity: 0.25 })
-        })
+        window.google.maps.event.addListener(newShape,"mouseover",function(){
+          this.setOptions({fillOpacity: 0.6});
+        });
+        window.google.maps.event.addListener(newShape,"mouseout",function(){
+          this.setOptions({fillOpacity: 0.25});
+        });
         newLayers.push(newShape)
       } else {
-        let newShape = new window.google.maps.Polygon({
+        let newShape = new google.maps.Polygon({
           paths: element.coordinates,
           strokeColor: element.color,
           strokeOpacity: 0.8,
@@ -108,9 +106,9 @@ const loadAreas = () => {
       }
     }
     if(newLayers.length > 0) {
-      map.fitBounds(bounds); //change this to initialMap.fitbounds(bounds)? 
+      initialMap.fitBounds(bounds); 
     } else {
-      map.setCenter(storeCenter); //change this to initialMap.setCenter(storeCenter)? 
+      initialMap.setCenter(storeCenter);
     }
     currentLayers = newLayers;
   }
@@ -135,7 +133,7 @@ const loadAreas = () => {
       // details: 0.4828032,
       // color: getRandomColor()
     }
-    var newShape = new window.google.maps.Circle({
+    var newShape = new google.maps.Circle({
       strokeColor: newArea.color,
       strokeOpacity: 0.8,
       strokeWeight: 2,
@@ -145,12 +143,13 @@ const loadAreas = () => {
       center: newArea.coordinates,
       radius: newArea.details * 1000 * 0.621371 // in miles
     })
-     $(window.google.maps.event.addListener).mouseover(function() {
-       $('newShape').data({ fillOpacity: 0.6 }) //double check this
-     })
-     $(window.google.maps.event.addListener).mouseout(function() {
-       $('newShape').data({ fillOpacity: 0.25 })
-     })
+       window.google.maps.event.addListener(newShape,"mouseover",function(){
+      this.setOptions({fillOpacity: 0.6});
+    });
+    window.google.maps.event.addListener(newShape,"mouseout",function(){
+      this.setOptions({fillOpacity: 0.25});
+    });
+    let currentLayers = currentLayers
     currentLayers.push(newShape);
 
     let deliveryAreasCopy = localStorage.getItem('delivery_areas')
