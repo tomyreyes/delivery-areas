@@ -33,7 +33,7 @@ if(initialMap === false) {
   })
 
 
-const getRandomColour = () => {
+const getRandomColor = () => {
    let colors = [
     '#630460',
     '#c500c7',
@@ -154,7 +154,7 @@ const loadAreas = () => { // i will need to call this function again when someon
   //modal functions
 
   //In place of AddNewArea() 
-  $('button.save').click(function(){
+  $('button.save').click(function(event){
     let areaName = $('#area-name').val()
     let minimumOrder = $('#minimum-order').val()
     let deliveryCharge = $('#delivery-charge').val()
@@ -171,6 +171,12 @@ const loadAreas = () => { // i will need to call this function again when someon
       details: 0.4828032,
       color: getRandomColor()
     }
+
+    $('div.deliveryAreas').append(`<div class="area">${newArea.areaName}</div>`)
+    $('div.area').append('<a class="remove">remove</a>') //this will append multiple atm 
+    //I need to make an association here between the delivery area div and the newArea div 
+    // each area div needs to be unique so when clicked on it will pop a modal that has its information already placed inside of it 
+
     var newShape = new google.maps.Circle({
       strokeColor: newArea.color,
       strokeOpacity: 0.8,
@@ -193,6 +199,13 @@ const loadAreas = () => { // i will need to call this function again when someon
     let deliveryAreasCopy = localStorage.getItem('delivery_areas')
     deliveryAreasCopy.push(newArea)
     localStorage.setItem('delivery_areas',JSON.stringify(deliveryAreasCopy))
+
+  })
+
+  $('div.deliveryAreas').on('click', '.area',function(){
+    // conditional to discern between delivery areas needs to be placed here 
+
+
   })
 
 

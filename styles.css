@@ -1,6 +1,6 @@
 #map {
       height: 350px;
-      width: 60%;
+      width: 100%;
       float: right;
     }
 #modal-map{
@@ -14,4 +14,14 @@
 .add-new {
   float:right;
   margin-top: 15px;
+}
+
+.area {
+  border-style: solid;
+  padding: 10px;
+  /* border-color: black; */
+}
+
+.remove {
+  float: right;
 }
