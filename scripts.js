@@ -73,10 +73,10 @@ const loadAreas = () => { // i will need to call this function again when someon
           center: element.coordinates,
           radius: element.details * 1000
         })
-        window.google.maps.event.addListener(newShape,"mouseover",function(){
+        google.maps.event.addListener(newShape,"mouseover",function(){
           this.setOptions({fillOpacity: 0.6});
         });
-        window.google.maps.event.addListener(newShape,"mouseout",function(){
+        google.maps.event.addListener(newShape,"mouseout",function(){
           this.setOptions({fillOpacity: 0.25});
         });
         newLayers.push(newShape)
@@ -181,10 +181,10 @@ const loadAreas = () => { // i will need to call this function again when someon
       center: newArea.coordinates,
       radius: newArea.details * 1000 * 0.621371 // in miles
     })
-       window.google.maps.event.addListener(newShape,"mouseover",function(){
+       google.maps.event.addListener(newShape,"mouseover",function(){
       this.setOptions({fillOpacity: 0.6});
     });
-    window.google.maps.event.addListener(newShape,"mouseout",function(){
+    google.maps.event.addListener(newShape,"mouseout",function(){
       this.setOptions({fillOpacity: 0.25});
     });
     let currentLayers = currentLayers
