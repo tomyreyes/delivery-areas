@@ -15,7 +15,6 @@ initMap = () => {
   })
   initialized = true
 }
-
   let modalMap = new google.maps.Map(document.getElementById('modal-map'), {
     zoom: 12,
     center: { lat: 25.933373, lng: -80.2736907 }
@@ -24,14 +23,13 @@ initMap = () => {
     position: storeCenter,
     map: modalMap
   })
-
   google.maps.event.addListenerOnce(modalMap, 'idle', function() {
     loadAreas()
   })
 }
 
 let delivery_areas = []
-//gloal object for different shapes? 
+let currentLayers = []
 
 const loadAreas = () => {
   console.log('call')
@@ -86,9 +84,9 @@ const loadAreas = () => {
       }
     }
     if(newLayers.length > 0) {
-      map.fitBounds(bounds);
+      map.fitBounds(bounds); //change this to initialMap.fitbounds(bounds)? 
     } else {
-      map.setCenter(storeCenter);
+      map.setCenter(storeCenter); //change this to initialMap.setCenter(storeCenter)? 
     }
     currentLayers = newLayers;
   }
@@ -129,8 +127,8 @@ const loadAreas = () => {
      $(window.google.maps.event.addListener).mouseout(function() {
        $('newShape').data({ fillOpacity: 0.25 })
      })
-    // var currentLayers = this.state.currentLayers;
-    // currentLayers.push(newShape);
+    currentLayers.push(newShape);
+    
     let deliveryAreasCopy = localStorage.getItem('delivery_areas')
     deliveryAreasCopy.push(newArea)
     localStorage.setItem('delivery_areas',JSON.stringify(deliveryAreasCopy))
