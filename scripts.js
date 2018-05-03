@@ -48,7 +48,7 @@ const loadAreas = () => {
           strokeWeight: 2,
           fillColor: element.color,
           fillOpacity: 0.25,
-          map: map,
+          map: initialMap,
           center: element.coordinates,
           radius: element.details * 1000
         })
@@ -67,7 +67,7 @@ const loadAreas = () => {
           strokeWeight: 2,
           fillColor: element.color,
           fillOpacity: 0.25,
-          map: map
+          map: initialMap
         })
       }
     })
@@ -119,7 +119,7 @@ const loadAreas = () => {
       strokeWeight: 2,
       fillColor: newArea.color,
       fillOpacity: 0.25,
-      map: modalMap,
+      map: initialMap,
       center: newArea.coordinates,
       radius: newArea.details * 1000 * 0.621371 // in miles
     })
