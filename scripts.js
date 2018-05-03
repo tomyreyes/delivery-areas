@@ -31,7 +31,7 @@ initMap = () => {
 }
 
 let delivery_areas = []
-//gloal object for different shapes?  
+//gloal object for different shapes? 
 
 const loadAreas = () => {
   console.log('call')
@@ -56,7 +56,7 @@ const loadAreas = () => {
           $('newShape').data({fillOpacity: 0.6}) //double check this 
         })  
         $(window.google.maps.event.addListener).mouseout(function(){
-          $('newShape').data({ fillOpacity: 0.6 })
+          $('newShape').data({ fillOpacity: 0.25 })
         })
         newLayers.push(newShape)
       } else {
@@ -82,7 +82,6 @@ const loadAreas = () => {
             }
         })
       } else {
-        // console.log(newLayers[i].position)
         bounds.union(newLayers[i].getBounds());
       }
     }
@@ -93,6 +92,49 @@ const loadAreas = () => {
     }
     currentLayers = newLayers;
   }
+
+  //modal functions
+
+  //In place of AddNewArea() 
+  $('button.save').click(function(){
+    let areaName = $('#area-name').val()
+    let minimumOrder = $('#minimum-order').val()
+    let deliveryCharge = $('#delivery-charge').val()
+    let maximumTime = $('#maximum-time').val()
+
+    let newArea = {
+      id : new Date().getUTCMilliseconds(),
+      areaName,
+      minimumOrder,
+      deliveryCharge,
+      maximumTime,
+      // type : 'radius',
+      // new : true,
+      // details: 0.4828032,
+      // color: getRandomColor()
+    }
+    var newShape = new window.google.maps.Circle({
+      strokeColor: newArea.color,
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: newArea.color,
+      fillOpacity: 0.25,
+      map: modalMap,
+      center: newArea.coordinates,
+      radius: newArea.details * 1000 * 0.621371 // in miles
+    })
+     $(window.google.maps.event.addListener).mouseover(function() {
+       $('newShape').data({ fillOpacity: 0.6 }) //double check this
+     })
+     $(window.google.maps.event.addListener).mouseout(function() {
+       $('newShape').data({ fillOpacity: 0.25 })
+     })
+    // var currentLayers = this.state.currentLayers;
+    // currentLayers.push(newShape);
+    let deliveryAreasCopy = localStorage.getItem('delivery_areas')
+    deliveryAreasCopy.push(newArea)
+    localStorage.setItem('delivery_areas',JSON.stringify(deliveryAreasCopy))
+  })
 
 
 
