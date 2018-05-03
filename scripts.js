@@ -1,33 +1,40 @@
 let storeCenter = { lng: -80.2736907, lat: 25.933373 }
 
-initMap = () => {
-  let map = new google.maps.Map(document.getElementById('map'), {
+initMap = () => { 
+ 
+  let initialized = false // A flag so initialMap is only initialized once. 
+
+  if (initialized === false) {
+  let initialMap = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: { lat: 25.933373, lng: -80.2736907 }
   })
   let marker = new google.maps.Marker({
     position: storeCenter,
-    map: map
+    map: initialMap
   })
+  initialized = true
+}
 
-  let map2 = new google.maps.Map(document.getElementById('modal-map'), {
+  let modalMap = new google.maps.Map(document.getElementById('modal-map'), {
     zoom: 12,
     center: { lat: 25.933373, lng: -80.2736907 }
   })
-  let marker2 = new google.maps.Marker({
+  let modalMarker = new google.maps.Marker({
     position: storeCenter,
-    map: map2
+    map: modalMap
+  })
+
+  google.maps.event.addListenerOnce(modalMap, 'idle', function() {
+    loadAreas()
   })
 }
 
 let delivery_areas = []
-localStorage.setItem('delivery_areas', JSON.stringify(delivery_areas))
-
-$('#map').on('load', function(){ // I want to call loadAreas() when map is loaded 
-  console.log('loaded')
-})
+//gloal object for different shapes?  
 
 const loadAreas = () => {
+  console.log('call')
   let newLayers = []
   let bounds = new window.google.maps.LatLngBounds()
   delivery_areas = localStorage.getItem('delivery_areas')
@@ -45,11 +52,11 @@ const loadAreas = () => {
           center: element.coordinates,
           radius: element.details * 1000
         })
-        window.google.maps.event.addListener(newShape, 'mouseover', function() {
-          this.setOptions({ fillOpacity: 0.6 })
-        }) //refactor to jQuery
-        window.google.maps.event.addListener(newShape, 'mouseout', function() {
-          this.setOptions({ fillOpacity: 0.25 }) //refactor
+        $(window.google.maps.event.addListener).mouseover(function(){
+          $('newShape').data({fillOpacity: 0.6}) //double check this 
+        })  
+        $(window.google.maps.event.addListener).mouseout(function(){
+          $('newShape').data({ fillOpacity: 0.6 })
         })
         newLayers.push(newShape)
       } else {
@@ -65,4 +72,29 @@ const loadAreas = () => {
       }
     })
   }
-}
+  for (var i=0; i < newLayers.length; i++){
+      if(delivery_areas[i].type!=='radius') {
+        var paths = newLayers[i].getPaths();
+         paths.forEach(function(path){
+           var ar = path.getArray();
+           for(var i=0, l = ar.length; i <l; i++) {
+              bounds.extend(ar[i]);
+            }
+        })
+      } else {
+        // console.log(newLayers[i].position)
+        bounds.union(newLayers[i].getBounds());
+      }
+    }
+    if(newLayers.length > 0) {
+      map.fitBounds(bounds);
+    } else {
+      map.setCenter(storeCenter);
+    }
+    currentLayers = newLayers;
+  }
+
+
+
+      
+
