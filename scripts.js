@@ -5,7 +5,8 @@ let currentLayers = []
 let colorCount = 0
 let initialMap = false
 let modalMap = false 
-
+let activeEdit = false
+let editing = false
 
 if(initialMap === false) { 
   initialMap = new google.maps.Map(document.getElementById('map'), {
@@ -53,7 +54,7 @@ const getRandomColour = () => {
   return thisColor;
 }
 
-const loadAreas = () => {
+const loadAreas = () => { // i will need to call this function again when someone clicks save on Modal 
   console.log('call')
   let newLayers = []
   let bounds = new google.maps.LatLngBounds() 
@@ -95,7 +96,7 @@ const loadAreas = () => {
   for (var i=0; i < newLayers.length; i++){
       if(delivery_areas[i].type!=='radius') {
         var paths = newLayers[i].getPaths();
-         paths.forEach(function(path){
+         paths.forEach(path => {
            var ar = path.getArray();
            for(var i=0, l = ar.length; i <l; i++) {
               bounds.extend(ar[i]);
@@ -113,6 +114,43 @@ const loadAreas = () => {
     currentLayers = newLayers;
   }
 
+  // const changeArea = (prop,direct,event) => { //this will be called when I am editing instead 
+  //   let activeCopy = JSON.parse(JSON.stringify(activeEdit));
+  //   var deliveryAreasCopy = JSON.parse(JSON.stringify(delivery_areas));
+  //   deliveryAreasCopy.forEach((element,index,array) => {
+  //     if(element.id === activeEdit.id) {
+  //       if(prop==='details'&&element.type==='radius'&&direct==='indirect') {
+  //         activeCopy[prop] = event; 
+  //         element[prop] = event;
+  //         currentLayers[index].setRadius(activeEdit.details*1000);
+  //       } else {
+  //         if(direct==='direct') {
+  //           activeCopy[prop] = parseFloat(event)*1.609344;
+  //           element[prop] = parseFloat(event)*1.609344;
+  //           currentLayers[index].setRadius(parseFloat(event)*1.609344*1000);
+  //         } else {
+  //           activeCopy[prop] = event.target.value; //refactor into jQuery 
+  //           element[prop] = event.target.value;
+  //         }
+  //       }
+  //     }
+  //   },
+  //   delivery_areas = deliveryAreasCopy,
+  //   activeEdit = activeCopy,
+  //   localStorage.setItem('delivery_areas',JSON.stringify(deliveryAreasCopy)))
+  // }
+
+  // editArea (area) { 
+  //   delete area.new;
+  //   this.setState({ activeEdit : area, editing : true });
+  // }
+
+
+
+
+
+
+
   //modal functions
 
   //In place of AddNewArea() 
@@ -128,10 +166,10 @@ const loadAreas = () => {
       minimumOrder,
       deliveryCharge,
       maximumTime,
-      // type : 'radius',
-      // new : true,
-      // details: 0.4828032,
-      // color: getRandomColor()
+      type : 'radius',
+      new : true,
+      details: 0.4828032,
+      color: getRandomColor()
     }
     var newShape = new google.maps.Circle({
       strokeColor: newArea.color,
