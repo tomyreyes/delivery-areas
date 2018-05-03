@@ -1,4 +1,9 @@
+//GLOBALS
 let storeCenter = { lng: -80.2736907, lat: 25.933373 }
+let delivery_areas = []
+let currentLayers = []
+let colorCount = 0
+
 
 initMap = () => { 
  
@@ -28,8 +33,26 @@ initMap = () => {
   })
 }
 
-let delivery_areas = []
-let currentLayers = []
+const getRandomColour = () => {
+   let colors = [
+    '#630460',
+    '#c500c7',
+    '#ed145b',
+    '#ed1c24',
+    '#ff5300',
+    '#ffff00',
+    '#63c000',
+    '#00882a',
+    '#005ec7',
+    '#00145f'
+  ];
+  let thisColor = colors[colorCount];
+  colorCount++;
+  if(colorCount===9) {
+    colorCount = 0;
+  }
+  return thisColor;
+}
 
 const loadAreas = () => {
   console.log('call')
@@ -52,6 +75,7 @@ const loadAreas = () => {
         })
         $(window.google.maps.event.addListener).mouseover(function(){
           $('newShape').data({fillOpacity: 0.6}) //double check this 
+          //this.setOptions({fillOpacity: 0.6}) could work in this case 
         })  
         $(window.google.maps.event.addListener).mouseout(function(){
           $('newShape').data({ fillOpacity: 0.25 })
@@ -128,7 +152,7 @@ const loadAreas = () => {
        $('newShape').data({ fillOpacity: 0.25 })
      })
     currentLayers.push(newShape);
-    
+
     let deliveryAreasCopy = localStorage.getItem('delivery_areas')
     deliveryAreasCopy.push(newArea)
     localStorage.setItem('delivery_areas',JSON.stringify(deliveryAreasCopy))
