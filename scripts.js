@@ -23,7 +23,7 @@ initMap = () => {
 let delivery_areas = []
 localStorage.setItem('delivery_areas', JSON.stringify(delivery_areas))
 
-$('window').on('load', function(){
+$('#map').on('load', function(){ // I want to call loadAreas() when map is loaded 
   console.log('loaded')
 })
 
