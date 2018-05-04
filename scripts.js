@@ -188,7 +188,7 @@ const loadAreas = () => {
 
       $(`#${element.id}`).replaceWith(`<div class="area" id=${element.id}>${element.areaName}</div>`)
       $(`#${element.id}`).append('<a class="remove">remove</a>')
-      $(`#${element.id}`).css({ 'border-color': `${newArea.color}` })
+      $(`#${element.id}`).css({ 'border-color': `${element.color}` })
     }
    })
    localStorage.setItem('delivery_areas', JSON.stringify(deliveryAreasCopy)) 
@@ -198,15 +198,14 @@ const loadAreas = () => {
   
   //EDIT DELIVERY AREAS 
   $(document).on('click', '.area', function(event){
-  editing = true
-    
+   
   let id = $(this).attr('id') 
   clickedId = id //Used for conditional in button 
   let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
 
-  deliveryAreasCopy.forEach((element,index) => {
-
-    if(element.id == id) {  //this will open a modal with the elements properties in the input bar 
+  deliveryAreasCopy.forEach((element,index) => {   //this will open a modal with the elements properties in the input bar 
+  if(element.id == id) { 
+  editing = true
     $('#newAreaModal').modal()
     $('#newAreaModal').on('shown.bs.modal', function() {
       $('#area-name').val(`${element.areaName}`)
