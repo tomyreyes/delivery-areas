@@ -56,14 +56,17 @@ const getRandomColor = () => {
   return thisColor;
 }
 
-const loadAreas = () => { // i will need to call this function again when someone clicks save on Modal 
-  console.log('call')
+const loadAreas = () => { 
+  console.log('loadAreas called')
   let newLayers = []
   let bounds = new google.maps.LatLngBounds() 
   delivery_areas = JSON.parse(localStorage.getItem('delivery_areas'))
 
   if (delivery_areas.length > 0) {
     delivery_areas.forEach(element => {
+    $(`<div class="area">${element.areaName}</div>`).attr({id: `${element.id}`}).appendTo('div.deliveryAreas').append('<a class="remove">remove</a>')
+    // $('div.area').attr({id: `${element.id}`})
+
       if (element.type === 'radius') {
         let newShape = new google.maps.Circle({
           strokeColor: element.color,
@@ -138,13 +141,12 @@ const loadAreas = () => { // i will need to call this function again when someon
       details: 0.4828032,
       color: getRandomColor()
     }
-
-    $(`<div class="area">${newArea.areaName}</div>`).appendTo('div.deliveryAreas').append('<a class="remove">remove</a>')
-    $('div.area').attr({id: `${newArea.id}`})
-
+     $(`<div class="area">${newArea.areaName}</div>`).attr({id: `${newArea.id}`}).appendTo('div.deliveryAreas').append('<a class="remove">remove</a>')
+    
     let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas'))
     deliveryAreasCopy.push(newArea)
     localStorage.setItem('delivery_areas', JSON.stringify(deliveryAreasCopy))
+
     var newShape = new google.maps.Circle({
       strokeColor: newArea.color,
       strokeOpacity: 0.8,
@@ -164,39 +166,40 @@ const loadAreas = () => { // i will need to call this function again when someon
     let currentLayers = currentLayers
     currentLayers.push(newShape);
 
-    
   })
   
   //when user is editing delivery areas 
-  $(document).on('click', '.area',function(event){
-   let id = $(this).attr('id')
+  $(document).on('click', '.area', function(event){
+    
+  let id = $(this).attr('id')
+  console.log(id)
+  let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
 
-  $('#newAreaModal').modal()
-  let areaName = $('#area-name').val()
-  let minimumOrder = $('#minimum-order').val()
-  let deliveryCharge = $('#delivery-charge').val()
-  let maximumTime = $('#maximum-time').val()
-  
-  let editArea = {
-      id : id,
-      areaName,
-      minimumOrder,
-      deliveryCharge,
-      maximumTime,
-      type : 'radius',
-      new : true,
-      details: 0.4828032
-    }
-  
-  
+  deliveryAreasCopy.forEach((element,index,array) => {
 
-    let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
-    deliveryAreasCopy.forEach(function(element,index,array) {
-      if(element.id === id) {
-          currentLayers[index].setRadius(activeEdit.details*1000);
+    if(element.id == id) { 
+    $('#newAreaModal').modal()
+    $('#newAreaModal').on('shown.bs.modal', function() {
+      $('#area-name').val(`${element.areaName}`)
+      $('#minimum-order').val(`${element.minimumOrder}`)
+      $('#delivery-charge').val(`${element.deliveryCharge}`)
+      $('#maximum-time').val(`${element.maximumTime}`)
+    })
+ 
 
-        }
+    // let areaName = $('#area-name').val()
+    // let minimumOrder = $('#minimum-order').val()
+    // let deliveryCharge = $('#delivery-charge').val()
+    // let maximumTime = $('#maximum-time').val()
+    
+
+
+      // currentLayers[index].setRadius(activeEdit.details*1000);
+      }
   })
+
+
+  
   
 })
 
