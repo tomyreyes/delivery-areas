@@ -1,6 +1,6 @@
 //GLOBALS
 let storeCenter = { lng: -80.2736907, lat: 25.933373 }
-let delivery_areas = []
+let delivery_areas = localStorage.getItem('delivery_areas') ? JSON.parse(localStorage.getItem('delivery_areas')) : []
 let currentLayers = []
 let colorCount = 0
 let initialMap = false
@@ -8,7 +8,9 @@ let modalMap = false
 let activeEdit = false
 let editing = false
 
-if(initialMap === false) { 
+localStorage.setItem('delivery_areas', JSON.stringify(delivery_areas))
+
+if(initialMap === false) {
   initialMap = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: { lat: 25.933373, lng: -80.2736907 }
@@ -48,7 +50,7 @@ const getRandomColor = () => {
   ];
   let thisColor = colors[colorCount];
   colorCount++;
-  if(colorCount===9) {
+  if(colorCount === 9) {
     colorCount = 0;
   }
   return thisColor;
@@ -58,7 +60,7 @@ const loadAreas = () => { // i will need to call this function again when someon
   console.log('call')
   let newLayers = []
   let bounds = new google.maps.LatLngBounds() 
-  delivery_areas = localStorage.getItem('delivery_areas')
+  delivery_areas = JSON.parse(localStorage.getItem('delivery_areas'))
 
   if (delivery_areas.length > 0) {
     delivery_areas.forEach(element => {
@@ -93,6 +95,7 @@ const loadAreas = () => { // i will need to call this function again when someon
       }
     })
   }
+
   for (var i=0; i < newLayers.length; i++){
       if(delivery_areas[i].type!=='radius') {
         var paths = newLayers[i].getPaths();
@@ -113,42 +116,6 @@ const loadAreas = () => { // i will need to call this function again when someon
     }
     currentLayers = newLayers;
   }
-
-  // const changeArea = (prop,direct,event) => { //this will be called when I am editing instead 
-  //   let activeCopy = JSON.parse(JSON.stringify(activeEdit));
-  //   var deliveryAreasCopy = JSON.parse(JSON.stringify(delivery_areas));
-  //   deliveryAreasCopy.forEach((element,index,array) => {
-  //     if(element.id === activeEdit.id) {
-  //       if(prop==='details'&&element.type==='radius'&&direct==='indirect') {
-  //         activeCopy[prop] = event; 
-  //         element[prop] = event;
-  //         currentLayers[index].setRadius(activeEdit.details*1000);
-  //       } else {
-  //         if(direct==='direct') {
-  //           activeCopy[prop] = parseFloat(event)*1.609344;
-  //           element[prop] = parseFloat(event)*1.609344;
-  //           currentLayers[index].setRadius(parseFloat(event)*1.609344*1000);
-  //         } else {
-  //           activeCopy[prop] = event.target.value; //refactor into jQuery 
-  //           element[prop] = event.target.value;
-  //         }
-  //       }
-  //     }
-  //   },
-  //   delivery_areas = deliveryAreasCopy,
-  //   activeEdit = activeCopy,
-  //   localStorage.setItem('delivery_areas',JSON.stringify(deliveryAreasCopy)))
-  // }
-
-  // editArea (area) { 
-  //   delete area.new;
-  //   this.setState({ activeEdit : area, editing : true });
-  // }
-
-
-
-
-
 
 
   //modal functions
@@ -172,22 +139,12 @@ const loadAreas = () => { // i will need to call this function again when someon
       color: getRandomColor()
     }
 
-    $('div.deliveryAreas').append(`<div class="area">${newArea.areaName}</div>`)
-    $('div.area').attr({
-      areaName: `${newArea.areaName}`,
-      id: `${newArea.id}`, 
-      minimumOrder: `${newArea.minimumOrder}`,
-      deliveryCharge: `${newArea.deliveryCharge}`,
-      maximumTime: `${newArea.maximumTime}`,
-      type: `${newArea.type}`,
-      details: `${newArea.details}`,
-      })
+    $(`<div class="area">${newArea.areaName}</div>`).appendTo('div.deliveryAreas').append('<a class="remove">remove</a>')
+    $('div.area').attr({id: `${newArea.id}`})
 
-    $('div.area').prop(`${newArea.minimumOrder}`)//double check this 
-    $('div.area').append('<a class="remove">remove</a>') //this will append multiple atm 
-    //I need to make an association here between the delivery area div and the newArea div 
-    // each area div needs to be unique so when clicked on it will pop a modal that has its information already placed inside of it 
-
+    let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas'))
+    deliveryAreasCopy.push(newArea)
+    localStorage.setItem('delivery_areas', JSON.stringify(deliveryAreasCopy))
     var newShape = new google.maps.Circle({
       strokeColor: newArea.color,
       strokeOpacity: 0.8,
@@ -207,30 +164,41 @@ const loadAreas = () => { // i will need to call this function again when someon
     let currentLayers = currentLayers
     currentLayers.push(newShape);
 
-    let deliveryAreasCopy = localStorage.getItem('delivery_areas')
-    deliveryAreasCopy.push(newArea)
-    localStorage.setItem('delivery_areas',JSON.stringify(deliveryAreasCopy))
-
-  })
-
-  $('div.deliveryAreas').on('click', '.area',function(event){
-    let activeCopy = event.target
-    console.log(activeCopy.attributes.areaName.nodeValue)
-    console.log(activeCopy.attributes.minimumOrder.nodeValue)
     
-    var deliveryAreasCopy = JSON.parse(JSON.stringify(delivery_areas)) 
-    deliveryAreasCopy.forEach(function(element,index,array) {
-      if(element.id === activeCopy.id) {
-        if(prop==='details'&&element.type==='radius'&&direct==='indirect') {
-          activeCopy[prop] = event;
-          element[prop] = event;
-          this.state.currentLayers[index].setRadius(this.state.activeEdit.details*1000);
-        }
-
-
-
-
   })
+  
+  //when user is editing delivery areas 
+  $(document).on('click', '.area',function(event){
+   let id = $(this).attr('id')
+
+  $('#newAreaModal').modal()
+  let areaName = $('#area-name').val()
+  let minimumOrder = $('#minimum-order').val()
+  let deliveryCharge = $('#delivery-charge').val()
+  let maximumTime = $('#maximum-time').val()
+  
+  let editArea = {
+      id : id,
+      areaName,
+      minimumOrder,
+      deliveryCharge,
+      maximumTime,
+      type : 'radius',
+      new : true,
+      details: 0.4828032
+    }
+  
+  
+
+    let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
+    deliveryAreasCopy.forEach(function(element,index,array) {
+      if(element.id === id) {
+          currentLayers[index].setRadius(activeEdit.details*1000);
+
+        }
+  })
+  
+})
 
 
 
