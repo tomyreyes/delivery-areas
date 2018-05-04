@@ -173,6 +173,17 @@ const loadAreas = () => { // i will need to call this function again when someon
     }
 
     $('div.deliveryAreas').append(`<div class="area">${newArea.areaName}</div>`)
+    $('div.area').attr({
+      areaName: `${newArea.areaName}`,
+      id: `${newArea.id}`, 
+      minimumOrder: `${newArea.minimumOrder}`,
+      deliveryCharge: `${newArea.deliveryCharge}`,
+      maximumTime: `${newArea.maximumTime}`,
+      type: `${newArea.type}`,
+      details: `${newArea.details}`,
+      })
+
+    $('div.area').prop(`${newArea.minimumOrder}`)//double check this 
     $('div.area').append('<a class="remove">remove</a>') //this will append multiple atm 
     //I need to make an association here between the delivery area div and the newArea div 
     // each area div needs to be unique so when clicked on it will pop a modal that has its information already placed inside of it 
@@ -202,8 +213,21 @@ const loadAreas = () => { // i will need to call this function again when someon
 
   })
 
-  $('div.deliveryAreas').on('click', '.area',function(){
-    // conditional to discern between delivery areas needs to be placed here 
+  $('div.deliveryAreas').on('click', '.area',function(event){
+    let activeCopy = event.target
+    console.log(activeCopy.attributes.areaName.nodeValue)
+    console.log(activeCopy.attributes.minimumOrder.nodeValue)
+    
+    var deliveryAreasCopy = JSON.parse(JSON.stringify(delivery_areas)) 
+    deliveryAreasCopy.forEach(function(element,index,array) {
+      if(element.id === activeCopy.id) {
+        if(prop==='details'&&element.type==='radius'&&direct==='indirect') {
+          activeCopy[prop] = event;
+          element[prop] = event;
+          this.state.currentLayers[index].setRadius(this.state.activeEdit.details*1000);
+        }
+
+
 
 
   })
