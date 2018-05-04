@@ -5,9 +5,9 @@ let currentLayers = []
 let colorCount = 0
 let initialMap = false
 let modalMap = false 
-let activeEdit = false
+// let activeEdit = false use for later ? 
 let editing = false
-let clickedId = 0
+let clickedId = 0 
 
 localStorage.setItem('delivery_areas', JSON.stringify(delivery_areas))
 
@@ -34,7 +34,6 @@ if(initialMap === false) {
   google.maps.event.addListenerOnce(modalMap, 'idle', function() {
     loadAreas()
   })
-
 
 const getRandomColor = () => {
    let colors = [
@@ -65,8 +64,9 @@ const loadAreas = () => {
 
   if (delivery_areas.length > 0) {
     delivery_areas.forEach(element => {
-    $(`<div class="area">${element.areaName}</div>`).attr({id: `${element.id}`}).appendTo('div.deliveryAreas').append('<a class="remove">remove</a>')
-    // $('div.area').attr({id: `${element.id}`})
+    $(`<div class="area" id=${element.id}>${element.areaName}</div>`).appendTo('div.deliveryAreas').append('<a class="remove">remove</a>')
+    $(`#${element.id}`).css({ 'border-color': `${element.color}` })
+
 
       if (element.type === 'radius') {
         let newShape = new google.maps.Circle({
@@ -122,12 +122,12 @@ const loadAreas = () => {
   }
 
 
-  //modal functions
+ //MODAL FUNCTIONS 
 
-  //In place of AddNewArea() 
-  $('button.save').click(function(event){
+  //ADD NEW AREA OR EDIT - button will operate differently depending on editing being true or false 
+  $('button.save').click(function(event){ 
 
-    if(editing === false) {
+    if(editing === false) { 
     let areaName = $('#area-name').val()
     let minimumOrder = $('#minimum-order').val()
     let deliveryCharge = $('#delivery-charge').val()
@@ -145,6 +145,7 @@ const loadAreas = () => {
       color: getRandomColor()
     }
      $(`<div class="area" id=${newArea.id}>${newArea.areaName}</div>`).appendTo('div.deliveryAreas').append('<a class="remove">remove</a>')
+     $(`#${newArea.id}`).css({'border-color': `${newArea.color}`})
     
     let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas'))
     deliveryAreasCopy.push(newArea)
@@ -187,23 +188,23 @@ const loadAreas = () => {
       $(`#${element.id}`).append('<a class="remove">remove</a>')
     }
    })
-   localStorage.setItem('delivery_areas', JSON.stringify(deliveryAreasCopy))
+   localStorage.setItem('delivery_areas', JSON.stringify(deliveryAreasCopy)) 
    editing = false 
   }
 })
   
-  //when user is editing delivery areas 
+  //EDIT DELIVERY AREAS 
   $(document).on('click', '.area', function(event){
-  editing = true 
+  editing = true
     
-  let id = $(this).attr('id')
+  let id = $(this).attr('id') 
   console.log(id)
   clickedId = id
   let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
 
   deliveryAreasCopy.forEach((element,index) => {
 
-    if(element.id == id) { 
+    if(element.id == id) {  //this will open a modal with the elements properties in the input bar 
     $('#newAreaModal').modal()
     $('#newAreaModal').on('shown.bs.modal', function() {
       $('#area-name').val(`${element.areaName}`)
@@ -216,10 +217,8 @@ const loadAreas = () => {
     let minimumOrder = $('#minimum-order').val()
     let deliveryCharge = $('#delivery-charge').val()
     let maximumTime = $('#maximum-time').val()
-
+    console.log(element)
     
-
-
       // currentLayers[index].setRadius(activeEdit.details*1000); add in later 
       }
   })
