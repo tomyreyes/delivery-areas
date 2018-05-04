@@ -11,7 +11,7 @@ let clickedId = 0
 
 localStorage.setItem('delivery_areas', JSON.stringify(delivery_areas))
 
-if(initialMap === false) {
+if(initialMap === false) { //ENSURES RENDERS ONLY ONCE
   initialMap = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: { lat: 25.933373, lng: -80.2736907 }
@@ -128,6 +128,7 @@ const loadAreas = () => {
   $('button.save').click(function(event){ 
 
     if(editing === false) { 
+    console.log('creating new delivery area')
     let areaName = $('#area-name').val()
     let minimumOrder = $('#minimum-order').val()
     let deliveryCharge = $('#delivery-charge').val()
@@ -170,7 +171,8 @@ const loadAreas = () => {
     let currentLayers = currentLayers
     currentLayers.push(newShape);
   } else {
-    console.log(clickedId)
+
+    console.log('editing delivery area')
   let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
   deliveryAreasCopy.forEach((element, index)=> {
     if(element.id == clickedId) {
@@ -186,6 +188,7 @@ const loadAreas = () => {
 
       $(`#${element.id}`).replaceWith(`<div class="area" id=${element.id}>${element.areaName}</div>`)
       $(`#${element.id}`).append('<a class="remove">remove</a>')
+      $(`#${element.id}`).css({ 'border-color': `${newArea.color}` })
     }
    })
    localStorage.setItem('delivery_areas', JSON.stringify(deliveryAreasCopy)) 
@@ -198,8 +201,7 @@ const loadAreas = () => {
   editing = true
     
   let id = $(this).attr('id') 
-  console.log(id)
-  clickedId = id
+  clickedId = id //Used for conditional in button 
   let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
 
   deliveryAreasCopy.forEach((element,index) => {
@@ -218,7 +220,7 @@ const loadAreas = () => {
     let deliveryCharge = $('#delivery-charge').val()
     let maximumTime = $('#maximum-time').val()
     console.log(element)
-    
+
       // currentLayers[index].setRadius(activeEdit.details*1000); add in later 
       }
   })
