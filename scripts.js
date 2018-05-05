@@ -141,7 +141,24 @@ const loadAreas = () => {
     localStorage.setItem('delivery_areas', JSON.stringify(newCopy))
   })
 
- //MODAL FUNCTIONS ---------
+  //HIGHLIGHT FUNCTION
+  $(document).on('mouseover', '.area', function(){
+    console.log('highlightme')
+  })
+
+ //MODAL FUNCTIONS
+
+//OPEN MODAL WITH BLANK INPUT VALUES
+$('button.add-new').click(function(){
+  editing = false
+   $('#newAreaModal').on('shown.bs.modal', function() {
+     $('#area-name').val('')
+     $('#minimum-order').val('')
+     $('#delivery-charge').val('')
+     $('#maximum-time').val('')
+   })
+})
+
 
 //ADD NEW AREA OR EDIT - button will operate differently depending on editing being true or false 
   $('button.save').click(function(event){ 
@@ -232,13 +249,6 @@ const loadAreas = () => {
       $('#delivery-charge').val(`${element.deliveryCharge}`)
       $('#maximum-time').val(`${element.maximumTime}`)
     })
-
-    let areaName = $('#area-name').val()
-    let minimumOrder = $('#minimum-order').val()
-    let deliveryCharge = $('#delivery-charge').val()
-    let maximumTime = $('#maximum-time').val()
-    console.log(element)
-
       // currentLayers[index].setRadius(activeEdit.details*1000); add in later 
       }
   })
