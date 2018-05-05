@@ -64,7 +64,7 @@ const loadAreas = () => {
 
   if (delivery_areas.length > 0) {
     delivery_areas.forEach(element => {
-    $(`<div class="area" id=${element.id}>${element.areaName}</div>`).appendTo('div.deliveryAreas').append('<a class="remove">remove</a>')
+    $(`<div class="area" id=${element.id}>${element.areaName}</div>`).appendTo('div.deliveryAreas').append(`<a class="remove" id=${element.id}>remove</a>`)
     $(`#${element.id}`).css({ 'border-color': `${element.color}` })
 
 
@@ -121,10 +121,29 @@ const loadAreas = () => {
     currentLayers = newLayers;
   }
 
+  //DELETE delivery_areas
+  $(document).on("click", 'a.remove', function(event){ 
+     event.stopPropagation() //PREVENT FROM OPENING MODAL 
+    let id = this.id 
+    let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
+    
+    let newCopy = deliveryAreasCopy.filter(element =>{
+      if(element.id != id) {
+        return element
+      }
+    })
+    //DELETE FROM UI DYNAMICALLY
+    deliveryAreasCopy.forEach(element => {
+      if(element.id == id) {
+        $(`#${id}`).remove()
+      }
+    })
+    localStorage.setItem('delivery_areas', JSON.stringify(newCopy))
+  })
 
- //MODAL FUNCTIONS 
+ //MODAL FUNCTIONS ---------
 
-  //ADD NEW AREA OR EDIT - button will operate differently depending on editing being true or false 
+//ADD NEW AREA OR EDIT - button will operate differently depending on editing being true or false 
   $('button.save').click(function(event){ 
 
     if(editing === false) { 
@@ -145,7 +164,7 @@ const loadAreas = () => {
       details: 0.4828032,
       color: getRandomColor()
     }
-     $(`<div class="area" id=${newArea.id}>${newArea.areaName}</div>`).appendTo('div.deliveryAreas').append('<a class="remove">remove</a>')
+     $(`<div class="area" id=${newArea.id}>${newArea.areaName}</div>`).appendTo('div.deliveryAreas').append(`<a class="remove" id=${newArea.id}>remove</a>`)
      $(`#${newArea.id}`).css({'border-color': `${newArea.color}`})
     
     let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas'))
@@ -187,7 +206,7 @@ const loadAreas = () => {
       element.maximumTime = maximumTime
 
       $(`#${element.id}`).replaceWith(`<div class="area" id=${element.id}>${element.areaName}</div>`)
-      $(`#${element.id}`).append('<a class="remove">remove</a>')
+      $(`#${element.id}`).append(`<a class="remove" id=${element.id}>remove</a>`)
       $(`#${element.id}`).css({ 'border-color': `${element.color}` })
     }
    })
@@ -197,7 +216,7 @@ const loadAreas = () => {
 })
   
   //EDIT DELIVERY AREAS 
-  $(document).on('click', '.area', function(event){
+  $(document).on('click', '.area', function(){
    
   let id = $(this).attr('id') 
   clickedId = id //Used for conditional in button 
