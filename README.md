@@ -10,8 +10,6 @@ Add and Edit functionality with jQuery slider and circle
 
 changeCurrentCoordinatesFunctionality 
 
-removeArea() - this won’t take too long 
-
 highlightArea() functionality - won’t take too long 
 
 ### Modal.js 
