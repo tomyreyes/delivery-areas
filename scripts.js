@@ -98,7 +98,7 @@ const loadAreas = () => {
       }
     })
   }
-  
+
 //UPDATED THIS FOR JQUERY USE
   for (var i=0; i < newLayers.length; i++){
       if(delivery_areas[i].type!=='radius') {
@@ -146,6 +146,9 @@ const loadAreas = () => {
     console.log('highlightme')
   })
 
+  //SLIDER FOR MODAL 
+  $('#slider').slider()
+
  //MODAL FUNCTIONS
 
 //OPEN MODAL WITH BLANK INPUT VALUES
@@ -158,7 +161,6 @@ $('button.add-new').click(function(){
      $('#maximum-time').val('')
    })
 })
-
 
 //ADD NEW AREA OR EDIT - button will operate differently depending on editing being true or false 
   $('button.save').click(function(event){ 
