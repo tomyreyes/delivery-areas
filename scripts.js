@@ -5,13 +5,12 @@ let currentLayers = []
 let colorCount = 0
 let initialMap = false
 let modalMap = false 
-// let activeEdit = false use for later ? 
 let editing = false
 let clickedId = 0 
 
 localStorage.setItem('delivery_areas', JSON.stringify(delivery_areas))
 
-if(initialMap === false) { //ENSURES RENDERS ONLY ONCE
+if(initialMap === false) { //ENSURES RENDERS ONLY ONCE FOR FUTURE FUNCTIONALITY
   initialMap = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: { lat: 25.933373, lng: -80.2736907 }
@@ -99,7 +98,8 @@ const loadAreas = () => {
       }
     })
   }
-
+  
+//UPDATED THIS FOR JQUERY USE
   for (var i=0; i < newLayers.length; i++){
       if(delivery_areas[i].type!=='radius') {
         var paths = newLayers[i].getPaths();
@@ -207,8 +207,8 @@ $('button.add-new').click(function(){
     let currentLayers = currentLayers
     currentLayers.push(newShape);
   } else {
-
-    console.log('editing delivery area')
+  
+  console.log('editing delivery area')
   let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
   deliveryAreasCopy.forEach((element, index)=> {
     if(element.id == clickedId) {
