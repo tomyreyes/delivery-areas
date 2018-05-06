@@ -8,6 +8,8 @@ let modalMap = false
 let editing = false
 let clickedId = 0 
 
+let coordinates = { lng: -80.2736907, lat: 25.933373 }
+
 localStorage.setItem('delivery_areas', JSON.stringify(delivery_areas))
 
 if(initialMap === false) { //ENSURES RENDERS ONLY ONCE FOR FUTURE FUNCTIONALITY
@@ -67,7 +69,7 @@ const loadAreas = () => {
     $(`#${element.id}`).css({ 'border-color': `${element.color}` })
 
 
-      if (element.type === 'radius') {
+      if (element.type == 'radius') {
         let newShape = new google.maps.Circle({
           strokeColor: element.color,
           strokeOpacity: 0.8,
@@ -75,7 +77,8 @@ const loadAreas = () => {
           fillColor: element.color,
           fillOpacity: 0.25,
           map: initialMap,
-          center: element.coordinates,
+          // center: element.coordinates, // don't have this yet
+          // center: coordinates, //verified that this is what i need  
           radius: element.details * 1000
         })
         google.maps.event.addListener(newShape,"mouseover",function(){
@@ -190,7 +193,7 @@ $('button.add-new').click(function(){
     deliveryAreasCopy.push(newArea)
     localStorage.setItem('delivery_areas', JSON.stringify(deliveryAreasCopy))
 
-    var newShape = new google.maps.Circle({
+      newShape = new google.maps.Circle({
       strokeColor: newArea.color,
       strokeOpacity: 0.8,
       strokeWeight: 2,
