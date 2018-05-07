@@ -7,8 +7,9 @@ let initialMap = false
 let modalMap = false 
 let editing = false
 let clickedId = 0 
-
-let coordinates = { lng: -80.2736907, lat: 25.933373 }
+let type = 'radius'
+let areaColor = false 
+let newShape = false 
 
 localStorage.setItem('delivery_areas', JSON.stringify(delivery_areas))
 
@@ -77,8 +78,7 @@ const loadAreas = () => {
           fillColor: element.color,
           fillOpacity: 0.25,
           map: initialMap,
-          // center: element.coordinates, // don't have this yet
-          // center: coordinates, //verified that this is what i need  
+          center: element.coordinates, // don't have this yet 
           radius: element.details * 1000
         })
         google.maps.event.addListener(newShape,"mouseover",function(){
@@ -102,7 +102,7 @@ const loadAreas = () => {
     })
   }
 
-//UPDATED THIS FOR JQUERY USE
+//UPDATED THIS FOR JQUERY USE BUT DOES NOT WORK YET 
   for (var i=0; i < newLayers.length; i++){
       if(delivery_areas[i].type!=='radius') {
         var paths = newLayers[i].getPaths();
@@ -157,11 +157,28 @@ const loadAreas = () => {
 //OPEN MODAL WITH BLANK INPUT VALUES
 $('button.add-new').click(function(){
   editing = false
+  areaColor = getRandomColor()
    $('#newAreaModal').on('shown.bs.modal', function() {
      $('#area-name').val('')
      $('#minimum-order').val('')
      $('#delivery-charge').val('')
      $('#maximum-time').val('')
+
+     newShape = new google.maps.Circle({
+       strokeColor: areaColor,
+       strokeOpacity: 0.8,
+       strokeWeight: 2,
+       fillColor: areaColor,
+       fillOpacity: 0.25,
+       map: modalMap,
+       center: storeCenter,
+       radius: (.4828032 * 1000 * 0.621371)  // in miles
+     })
+     //remove old map and put in new
+     if (modalMap !== false) {
+
+       
+     }
    })
 })
 
@@ -181,10 +198,11 @@ $('button.add-new').click(function(){
       minimumOrder,
       deliveryCharge,
       maximumTime,
-      type : 'radius',
+      type: type,
       new : true,
       details: 0.4828032,
-      color: getRandomColor()
+      color: areaColor,
+      coordinates: storeCenter
     }
      $(`<div class="area" id=${newArea.id}>${newArea.areaName}</div>`).appendTo('div.deliveryAreas').append(`<a class="remove" id=${newArea.id}>remove</a>`)
      $(`#${newArea.id}`).css({'border-color': `${newArea.color}`})
@@ -192,8 +210,8 @@ $('button.add-new').click(function(){
     let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas'))
     deliveryAreasCopy.push(newArea)
     localStorage.setItem('delivery_areas', JSON.stringify(deliveryAreasCopy))
-
-      newShape = new google.maps.Circle({
+    //(if type == 'radius') 
+    let newShape = new google.maps.Circle({
       strokeColor: newArea.color,
       strokeOpacity: 0.8,
       strokeWeight: 2,
@@ -211,7 +229,11 @@ $('button.add-new').click(function(){
     });
     let currentLayers = currentLayers
     currentLayers.push(newShape);
-  } else {
+  } 
+    //else if (type == 'custom_polygon')
+
+
+  else {
   
   console.log('editing delivery area')
   let deliveryAreasCopy = JSON.parse(localStorage.getItem('delivery_areas')) 
@@ -236,7 +258,42 @@ $('button.add-new').click(function(){
    editing = false 
   }
 })
-  
+
+//select option 
+$('#radius').click(function(){
+  type = 'radius'
+})
+$('#postal').click(function(){
+  type = 'postal'
+})
+$('#custom_polygon').click(function(){
+  type = 'custom_polygon'
+})
+
+//THIS WILL CHANGE RADIUS 
+$('#ex6').slider()
+$('#ex6').on('slide', function(slideEvt) {
+
+newShape.setMap(null)
+
+newShape = new google.maps.Circle({
+     strokeColor: areaColor,
+     strokeOpacity: 0.8,
+     strokeWeight: 2,
+     fillColor: areaColor,
+     fillOpacity: 0.25,
+     map: modalMap,
+     center: storeCenter,
+     radius: (0.4828032 * 1000 * 0.621371) * slideEvt.value // in miles
+   })
+
+
+  $('#ex6SliderVal').text(slideEvt.value)
+  })
+
+
+
+
   //EDIT DELIVERY AREAS 
   $(document).on('click', '.area', function(){
    
@@ -258,6 +315,8 @@ $('button.add-new').click(function(){
       }
   })
 })
+
+
 
 
 
