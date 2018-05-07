@@ -149,9 +149,7 @@ const loadAreas = () => {
     console.log('highlightme')
   })
 
-  //SLIDER FOR MODAL 
-  $('#slider').slider()
-
+  
  //MODAL FUNCTIONS
 
 //OPEN MODAL WITH BLANK INPUT VALUES
@@ -290,9 +288,6 @@ newShape = new google.maps.Circle({
 
   $('#ex6SliderVal').text(slideEvt.value)
   })
-
-
-
 
   //EDIT DELIVERY AREAS 
   $(document).on('click', '.area', function(){
