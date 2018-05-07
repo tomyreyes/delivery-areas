@@ -71,7 +71,7 @@ const loadAreas = () => {
 
 
       if (element.type == 'radius') {
-        let newShape = new google.maps.Circle({
+        newShape = new google.maps.Circle({
           strokeColor: element.color,
           strokeOpacity: 0.8,
           strokeWeight: 2,
@@ -89,7 +89,7 @@ const loadAreas = () => {
         });
         newLayers.push(newShape)
       } else {
-        let newShape = new google.maps.Polygon({
+        newShape = new google.maps.Polygon({
           paths: element.coordinates,
           strokeColor: element.color,
           strokeOpacity: 0.8,
@@ -211,7 +211,7 @@ $('button.add-new').click(function(){
     deliveryAreasCopy.push(newArea)
     localStorage.setItem('delivery_areas', JSON.stringify(deliveryAreasCopy))
     //(if type == 'radius') 
-    let newShape = new google.maps.Circle({
+    newShape = new google.maps.Circle({
       strokeColor: newArea.color,
       strokeOpacity: 0.8,
       strokeWeight: 2,
