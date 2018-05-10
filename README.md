@@ -2,11 +2,9 @@
 
 ## TO DO 
 
-I have not added the circle - rectangle map functionalities in yet. 
 
 ### App.js
 
-Add and Edit functionality with jQuery slider and circle 
 
 changeCurrentCoordinatesFunctionality 
 
